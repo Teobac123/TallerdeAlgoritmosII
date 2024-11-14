@@ -15,6 +15,10 @@ public class Vuelo {
         this.precio = precio;
     }
 
+    public int getPrecio(){
+        return precio;
+    }
+
     public void registrarTripulante(String nombre) {
         tripulantes.registrarTripulante(nombre);
         actualizarPrecio();

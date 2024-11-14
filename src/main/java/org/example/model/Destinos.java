@@ -15,8 +15,17 @@ public class Destinos implements ICrearListaDeDestinos {
 
     @Override
     public void agregarVuelo(String origen, String destino, int precio) {
-        Vuelo vuelo = new Vuelo(origen, destino, precio);
-        destinos.get(origen).put(destino, vuelo);
+        destinos.putIfAbsent(origen, new HashMap<>());
+        Map<String, Vuelo> vuelosDesdeOrigen = destinos.get(origen);
+
+        if (vuelosDesdeOrigen.containsKey(destino)) {
+            Vuelo vueloExistente = vuelosDesdeOrigen.get(destino);
+            if (precio < vueloExistente.getPrecioConDescuento()) {
+                vuelosDesdeOrigen.put(destino, new Vuelo(origen, destino, precio));
+            }
+        } else {
+            vuelosDesdeOrigen.put(destino, new Vuelo(origen, destino, precio));
+        }
     }
 
     @Override
