@@ -1,55 +1,79 @@
 package org.example.model;
 
 import org.example.Arbol.ArbolAVL;
-
-import java.util.List;
+import org.example.model.Tripulante;
 
 public class Vuelo {
-    private String origen, destino;
-    private int precio;
-    private ArbolAVL tripulantes = new ArbolAVL();
+    private String origen;
+    private String destino;
+    private double precioBase;
+    private ArbolAVL tripulantes;
+    private final int CAPACIDAD_MAXIMA = 10; // Máximo de 10 tripulantes
 
-    public Vuelo(String origen, String destino, int precio) {
+    public Vuelo(String origen, String destino, double precioBase) {
         this.origen = origen;
         this.destino = destino;
-        this.precio = precio;
+        this.precioBase = precioBase;
+        this.tripulantes = new ArbolAVL();
     }
 
-    public int getPrecio(){
-        return precio;
+    public void registrarTripulante(Tripulante tripulante) {
+        tripulantes.insertar(tripulante);
+        ajustarPrecio();
     }
 
-    public void registrarTripulante(String nombre) {
-        tripulantes.registrarTripulante(nombre);
-        actualizarPrecio();
-    }
-
-    private void actualizarPrecio() {
-        int ocupacion = tripulantes.obtenerTripulantes().size();
-        if (ocupacion >= 7) precio *= 0.6;
-        else if (ocupacion >= 5) precio *= 0.8;
-        else if (ocupacion >= 3) precio *= 0.9;
-    }
-
-    public int getPrecioConDescuento() {
-        return precio;
-    }
-
-
-    public void imprimirTripulantes() {
-        List<Tripulante> listaTripulantes = tripulantes.obtenerTripulantes();
-        System.out.println("Tripulantes del vuelo " + origen+ " a " + destino + ":");
-        for (Tripulante t : listaTripulantes) {
-            System.out.println("Asiento " + t.getAsiento() + ": " + t.getNombre());
+    private void ajustarPrecio() {
+        int ocupacion = calcularOcupacion();
+        if (ocupacion >= CAPACIDAD_MAXIMA) {
+            precioBase *= 0.6;
+        } else if (ocupacion >= CAPACIDAD_MAXIMA * 0.7) {
+            precioBase *= 0.8;
+        } else if (ocupacion >= CAPACIDAD_MAXIMA * 0.5) {
+            precioBase *= 0.9;
         }
     }
 
+    public void imprimirTripulantes() {
+        tripulantes.imprimirInOrden();
+    }
 
-        @Override
-    public String toString() {
-        return "Vuelo{" +
-                "origen='" + origen + '\'' +
-                ", destino='" + destino + '\'';
+    public int calcularOcupacion() {
+        return tripulantes.contarNodos();
+    }
+
+    public String getOrigen() {
+        return origen;
+    }
+
+    public void setOrigen(String origen) {
+        this.origen = origen;
+    }
+
+    public String getDestino() {
+        return destino;
+    }
+
+    public void setDestino(String destino) {
+        this.destino = destino;
+    }
+
+    public double getPrecioBase() {
+        return precioBase;
+    }
+
+    public void setPrecioBase(double precioBase) {
+        this.precioBase = precioBase;
+    }
+
+    public ArbolAVL getTripulantes() {
+        return tripulantes;
+    }
+
+    public void setTripulantes(ArbolAVL tripulantes) {
+        this.tripulantes = tripulantes;
+    }
+
+    public int getCAPACIDAD_MAXIMA() {
+        return CAPACIDAD_MAXIMA;
     }
 }
-

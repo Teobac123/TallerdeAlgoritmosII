@@ -5,6 +5,7 @@ import org.example.Interfaces.ICrearListaDeDestinos;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
 public class Destinos implements ICrearListaDeDestinos {
     private Map<String, Map<String, Vuelo>> destinos = new HashMap<>();
 
@@ -32,5 +33,7 @@ public class Destinos implements ICrearListaDeDestinos {
     public Vuelo buscarVueloMasBarato(String origen, String destino) {
         return destinos.getOrDefault(origen, new HashMap<>()).get(destino);
     }
-}
 
+
+}
+        */

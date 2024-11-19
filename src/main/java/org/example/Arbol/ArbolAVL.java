@@ -1,49 +1,26 @@
 package org.example.Arbol;
 
-import org.example.Interfaces.ICargarTripulantes;
 import org.example.model.NodoAVL;
 import org.example.model.Tripulante;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ArbolAVL implements ICargarTripulantes {
+public class ArbolAVL {
     private NodoAVL raiz;
 
-    private int altura(NodoAVL nodo) {
-        return nodo == null ? 0 : nodo.altura;
+    // Método para insertar un tripulante en el árbol AVL
+    public void insertar(Tripulante tripulante) {
+        raiz = insertarRecursivo(raiz, tripulante);
     }
 
-    private int balance(NodoAVL nodo) {
-        return nodo == null ? 0 : altura(nodo.izquierdo) - altura(nodo.derecho);
-    }
-
-    private NodoAVL rotacionDerecha(NodoAVL y) {
-        NodoAVL x = y.izquierdo;
-        y.izquierdo = x.derecho;
-        x.derecho = y;
-        y.altura = Math.max(altura(y.izquierdo), altura(y.derecho)) + 1;
-        x.altura = Math.max(altura(x.izquierdo), altura(x.derecho)) + 1;
-        return x;
-    }
-
-    private NodoAVL rotacionIzquierda(NodoAVL x) {
-        NodoAVL y = x.derecho;
-        x.derecho = y.izquierdo;
-        y.izquierdo = x;
-        x.altura = Math.max(altura(x.izquierdo), altura(x.derecho)) + 1;
-        y.altura = Math.max(altura(y.izquierdo), altura(y.derecho)) + 1;
-        return y;
-    }
-
-    private NodoAVL insertar(NodoAVL nodo, Tripulante tripulante) {
+    private NodoAVL insertarRecursivo(NodoAVL nodo, Tripulante tripulante) {
         if (nodo == null) return new NodoAVL(tripulante);
 
-        if (tripulante.getAsiento() < nodo.tripulante.getAsiento())
-            nodo.izquierdo = insertar(nodo.izquierdo, tripulante);
-        else if (tripulante.getAsiento() > nodo.tripulante.getAsiento())
-            nodo.derecho = insertar(nodo.derecho, tripulante);
-        else return nodo;
+        if (tripulante.getAsiento() < nodo.tripulante.getAsiento()) {
+            nodo.izquierdo = insertarRecursivo(nodo.izquierdo, tripulante);
+        } else if (tripulante.getAsiento() > nodo.tripulante.getAsiento()) {
+            nodo.derecho = insertarRecursivo(nodo.derecho, tripulante);
+        } else {
+            return nodo;
+        }
 
         nodo.altura = 1 + Math.max(altura(nodo.izquierdo), altura(nodo.derecho));
         int balance = balance(nodo);
@@ -60,27 +37,67 @@ public class ArbolAVL implements ICargarTripulantes {
             nodo.derecho = rotacionDerecha(nodo.derecho);
             return rotacionIzquierda(nodo);
         }
+
         return nodo;
     }
 
-    @Override
-    public void registrarTripulante(String nombre) {
-        Tripulante tripulante = new Tripulante(nombre);
-        raiz = insertar(raiz, tripulante);
+    // Método para contar los nodos en el árbol AVL (ocupación)
+    public int contarNodos() {
+        return contarNodosRecursivo(raiz);
     }
 
-    @Override
-    public List<Tripulante> obtenerTripulantes() {
-        List<Tripulante> tripulantes = new ArrayList<>();
-        inorder(raiz, tripulantes);
-        return tripulantes;
-    }
-
-    private void inorder(NodoAVL nodo, List<Tripulante> tripulantes) {
-        if (nodo != null) {
-            inorder(nodo.izquierdo, tripulantes);
-            tripulantes.add(nodo.tripulante);
-            inorder(nodo.derecho, tripulantes);
+    private int contarNodosRecursivo(NodoAVL nodo) {
+        if (nodo == null) {
+            return 0;
         }
+        return 1 + contarNodosRecursivo(nodo.izquierdo) + contarNodosRecursivo(nodo.derecho);
+    }
+
+    // Método para imprimir los tripulantes en orden de asientos
+    public void imprimirInOrden() {
+        imprimirInOrdenRecursivo(raiz);
+    }
+
+    private void imprimirInOrdenRecursivo(NodoAVL nodo) {
+        if (nodo != null) {
+            imprimirInOrdenRecursivo(nodo.izquierdo);
+            System.out.println(nodo.tripulante);
+            imprimirInOrdenRecursivo(nodo.derecho);
+        }
+    }
+
+    // Métodos de altura, balance, y rotaciones (como antes)
+    private int altura(NodoAVL nodo) {
+        return nodo == null ? 0 : nodo.altura;
+    }
+
+    private int balance(NodoAVL nodo) {
+        return nodo == null ? 0 : altura(nodo.izquierdo) - altura(nodo.derecho);
+    }
+
+    private NodoAVL rotacionDerecha(NodoAVL y) {
+        NodoAVL x = y.izquierdo;
+        NodoAVL T2 = x.derecho;
+
+        x.derecho = y;
+        y.izquierdo = T2;
+
+        y.altura = Math.max(altura(y.izquierdo), altura(y.derecho)) + 1;
+        x.altura = Math.max(altura(x.izquierdo), altura(x.derecho)) + 1;
+
+        return x;
+    }
+
+    private NodoAVL rotacionIzquierda(NodoAVL x) {
+        NodoAVL y = x.derecho;
+        NodoAVL T2 = y.izquierdo;
+
+        y.izquierdo = x;
+        x.derecho = T2;
+
+        x.altura = Math.max(altura(x.izquierdo), altura(x.derecho)) + 1;
+        y.altura = Math.max(altura(y.izquierdo), altura(y.derecho)) + 1;
+
+        return y;
     }
 }

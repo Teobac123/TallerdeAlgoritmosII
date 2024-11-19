@@ -1,45 +1,74 @@
 package org.example;
 
-import org.example.model.Destinos;
+import org.example.SistemaAereo;
+import org.example.model.Tripulante;
 import org.example.model.Vuelo;
 
 public class Main {
     public static void main(String[] args) {
-        Destinos grafo = new Destinos();
-        grafo.agregarDestino("CORDOBA");
-        grafo.agregarDestino("BUENOS AIRES");
-        grafo.agregarDestino("JUJUY");
-        grafo.agregarDestino("BARILOCHE");
-        grafo.agregarDestino("MISIONES");
-        grafo.agregarDestino("SALTA");
-        grafo.agregarDestino("TUCUMAN");
-        grafo.agregarDestino("SANTACRUZ");
 
-        //VUELO 1 CORDOBA -> BUENOS AIRES
-        grafo.agregarVuelo("CORDOBA", "BUENOS AIRES", 105000);
-        grafo.agregarVuelo("CORDOBA", "BUENOS AIRES", 120000);
-        grafo.agregarVuelo("CORDOBA", "BUENOS AIRES", 115000);
-        Vuelo vuelo = grafo.buscarVueloMasBarato("CORDOBA", "BUENOS AIRES");
-        System.out.println("Vuelo más barato: " + vuelo.getPrecio());
-        vuelo.registrarTripulante("Juancito");
-        vuelo.registrarTripulante("Anita");
-        vuelo.registrarTripulante("Carlito");
-        System.out.println("Precio con descuento: " + vuelo.getPrecioConDescuento());
-        vuelo.imprimirTripulantes();
+        SistemaAereo sistema = new SistemaAereo();
+
+
+
+        sistema.registrarVuelo("CORDOBA", "BUENOS AIRES", 105000);
+        sistema.registrarVuelo("CORDOBA", "BUENOS AIRES", 120000);
+        sistema.registrarVuelo("CORDOBA", "BUENOS AIRES", 115000);
+
+
+        System.out.println("Vuelos registrados entre CORDOBA y BUENOS AIRES:");
+        sistema.mostrarVuelos();
+
+
+        Vuelo vueloBarato1 = sistema.buscarVueloMasBarato("CORDOBA", "BUENOS AIRES");
+        if (vueloBarato1 != null) {
+            System.out.println("Vuelo más barato de CORDOBA a BUENOS AIRES seleccionado: $" + vueloBarato1.getPrecioBase());
+
+
+            vueloBarato1.registrarTripulante(new Tripulante("Juancito", "12345678", 1));
+            vueloBarato1.registrarTripulante(new Tripulante("Anita", "87654321", 2));
+            vueloBarato1.registrarTripulante(new Tripulante("Carlito", "11223344", 3));
+            vueloBarato1.registrarTripulante(new Tripulante("Marcelo", "11443344", 4));
+            vueloBarato1.registrarTripulante(new Tripulante("Maria Laura", "32424442", 5));
+            vueloBarato1.registrarTripulante(new Tripulante("Clara", "99213992", 6));
+            vueloBarato1.registrarTripulante(new Tripulante("Jaime", "73248492", 7));
+
+
+
+            System.out.println("Precio con descuento por ocupación: $" + vueloBarato1.getPrecioBase());
+            System.out.println("Tripulantes registrados en el vuelo de CORDOBA a BUENOS AIRES:");
+            vueloBarato1.imprimirTripulantes();
+        } else {
+            System.out.println("No se encontró un vuelo de CORDOBA a BUENOS AIRES.");
+        }
 
         System.out.println("---------------------------------------------------");
 
-        //VUELO 2 JUJUY -> BARILOCHE
-        grafo.agregarVuelo("JUJUY", "BARILOCHE", 75000);
-        grafo.agregarVuelo("JUJUY", "BARILOCHE", 95000);
-        grafo.agregarVuelo("JUJUY", "BARILOCHE", 85000);
-        Vuelo vuelo2 = grafo.buscarVueloMasBarato("JUJUY", "BARILOCHE");
-        System.out.println("Vuelo más barato: " + vuelo2.getPrecio());
-        vuelo2.registrarTripulante("Juan Perez");
-        vuelo2.registrarTripulante("Ana Gomez");
-        vuelo2.registrarTripulante("Carlos Ruiz");
-        System.out.println("Precio con descuento: " + vuelo2.getPrecioConDescuento());
-        vuelo2.imprimirTripulantes();
+
+        sistema.registrarVuelo("JUJUY", "BARILOCHE", 75000);
+        sistema.registrarVuelo("JUJUY", "BARILOCHE", 95000);
+        sistema.registrarVuelo("JUJUY", "BARILOCHE", 85000);
+
+
+        System.out.println("Vuelos registrados entre JUJUY y BARILOCHE:");
+        sistema.mostrarVuelos();
+
+
+        Vuelo vueloBarato2 = sistema.buscarVueloMasBarato("JUJUY", "BARILOCHE");
+        if (vueloBarato2 != null) {
+            System.out.println("Vuelo más barato de JUJUY a BARILOCHE seleccionado: $" + vueloBarato2.getPrecioBase());
+
+
+            vueloBarato2.registrarTripulante(new Tripulante("Juan Perez", "33445566", 1));
+            vueloBarato2.registrarTripulante(new Tripulante("Ana Gomez", "66778899", 2));
+            vueloBarato2.registrarTripulante(new Tripulante("Carlos Ruiz", "55667788", 3));
+
+
+            System.out.println("Precio con descuento por ocupación: $" + vueloBarato2.getPrecioBase());
+            System.out.println("Tripulantes registrados en el vuelo de JUJUY a BARILOCHE:");
+            vueloBarato2.imprimirTripulantes();
+        } else {
+            System.out.println("No se encontró un vuelo de JUJUY a BARILOCHE.");
+        }
     }
 }
-
